@@ -36,6 +36,14 @@ services:
       - 5432:5432
     networks:
       - dev
+  service-discovery:
+    image: consul:1.15.4
+    ports:
+      - 8500:8500
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    networks:
+      - dev
 volumes:
   db-data:
 secrets:
