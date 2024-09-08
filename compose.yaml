@@ -1,20 +1,19 @@
 services:
   server:
     build:
-      context: .
-      target: final
+      context: ./product-service/
+      # target: final
     ports:
       - 5193:8080
-
-# The commented out section below is an example of how to define a PostgreSQL
-# database that your application can use. `depends_on` tells Docker Compose to
-# start the database before your application. The `db-data` volume persists the
-# database data between container restarts. The `db-password` secret is used
-# to set the database password. You must create `db/password.txt` and add
-# a password of your choosing to it before running `docker compose up`.
+    links:
+      - db
+    environment:
+      - ConnectionStrings__ProductServiceConnection=Host=db;Port=5432;Database=ProductDb;Username=postgres;Password=password123
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - dev
   db:
     image: postgres
     restart: always
@@ -35,9 +34,13 @@ services:
       retries: 5
     ports:
       - 5432:5432
+    networks:
+      - dev
 volumes:
   db-data:
 secrets:
   db-password:
     file: db/password.txt
-
+networks:
+  dev:
+    driver: bridge
