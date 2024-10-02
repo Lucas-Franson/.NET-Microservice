@@ -1,9 +1,10 @@
 
 public class ProductService : IProductService {
     private readonly IProductRepository _productRepository;
+    private readonly IUserRepository _userRepository;
 
-    public ProductService(IProductRepository productRepository)
-    {
+    public ProductService(IProductRepository productRepository, IUserRepository userRepository) {
+        _userRepository = userRepository;
         _productRepository = productRepository;
     }
 
@@ -59,6 +60,11 @@ public class ProductService : IProductService {
             Stock = p.Stock,
             CategoryId = p.CategoryId
         });
+    }
+
+    public Task<List<UserEntity>> GetUsers()
+    {
+        return _userRepository.GetUsers();
     }
 
     public async Task<ProductModel> UpdateProduct(ProductModel product, int id)

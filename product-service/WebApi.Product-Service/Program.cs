@@ -15,8 +15,11 @@ builder.Services.AddSingleton<IHostedService, ConsulRegistrationService>();
 builder.Services.AddSingleton<IConsulClient>(p => new ConsulClient(config => {
     config.Address = new Uri(consultHost);
 }));
+builder.Services.AddHttpClient<IConsulHttpClient, ConsulHttpClient>();
+
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();

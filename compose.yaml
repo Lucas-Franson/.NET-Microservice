@@ -1,27 +1,34 @@
 services:
-  server:
+  product-service:
     build:
       context: ./product-service/
       # target: final
     ports:
-      - 5193:8080
+      - 9000:5193
     links:
-      - db
+      - product-postgres-db
+      - service-discovery
     environment:
-      - ConnectionStrings__ProductServiceConnection=Host=db;Port=5432;Database=ProductDb;Username=postgres;Password=password123
+      - ConnectionStrings__ProductServiceConnection=Host=product-postgres-db;Port=8000;Database=ProductDb;Username=postgres;Password=password123
+      - ConsulConfiguration__Host=http://service-discovery:8500
+      - ServiceConfiguration__Host=product-service
+      - ServiceConfiguration__Port=5193
+      - ServiceConfiguration__ServiceName=Product-Service
     depends_on:
-      db:
+      product-postgres-db:
         condition: service_healthy
+      service-discovery:
+        condition: service_started
     networks:
       - dev
-  db:
+  product-postgres-db:
     image: postgres
     restart: always
     user: postgres
     secrets:
       - db-password
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-product-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=example
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
@@ -33,7 +40,51 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - 5432:5432
+      - 8000:5432
+    networks:
+      - dev
+  identity-service:
+    build:
+      context: ./identity-service/
+      # target: final
+    ports:
+      - 9001:5217
+    links:
+      - identity-postgres-db
+      - service-discovery
+    environment:
+      - ConnectionStrings__ProductServiceConnection=Host=identity-postgres-db;Port=8001;Database=ProductDb;Username=postgres;Password=password123
+      - ConsulConfiguration__Host=http://service-discovery:8500
+      - ServiceConfiguration__Host=identity-service
+      - ServiceConfiguration__Port=5217
+      - ServiceConfiguration__ServiceName=Identity-Service
+    depends_on:
+      identity-postgres-db:
+        condition: service_healthy
+      service-discovery:
+        condition: service_started
+    networks:
+      - dev
+  identity-postgres-db:
+    image: postgres
+    restart: always
+    user: postgres
+    secrets:
+      - db-password
+    volumes:
+      - db-identity-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=example
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    expose:
+      - 5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 8001:5432
     networks:
       - dev
   service-discovery:
@@ -45,7 +96,8 @@ services:
     networks:
       - dev
 volumes:
-  db-data:
+  db-product-data:
+  db-identity-data:
 secrets:
   db-password:
     file: db/password.txt

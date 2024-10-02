@@ -1,21 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain.Product-Service\Domain.Product-Service.csproj" />
+    <ProjectReference Include="..\Domain.Identity-Service\Domain.Identity-Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Consul" Version="1.7.14.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.2" />
   </ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>WebApi.Product_Service</RootNamespace>
+    <RootNamespace>WebApi.Identity_Service</RootNamespace>
   </PropertyGroup>
 
 </Project>

@@ -93,4 +93,12 @@ public class ProductController {
     {
         _productService.DeleteProduct(id);
     }
+
+    [HttpGet("users")]
+    public async Task<List<UserEntity>> GetUsers()
+    {
+        var users = await _productService.GetUsers();
+        return users;
+    }
+
 }

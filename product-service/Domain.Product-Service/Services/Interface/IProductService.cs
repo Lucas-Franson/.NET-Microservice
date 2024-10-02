@@ -5,4 +5,5 @@ public interface IProductService {
     Task<ProductModel> CreateProduct(ProductModel product);
     Task<ProductModel> UpdateProduct(ProductModel product, int id);
     void DeleteProduct(int id);
+    Task<List<UserEntity>> GetUsers();
 }

@@ -5,19 +5,27 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
+                    "Host": "Product-Service",
                     "Port": 5193
                 }
             ],
             "UpstreamPathTemplate": "/api/product",
             "UpstreamHttpMethod": [ "Get" ],
+            "ServiceName": "ProductService",
             "RouteClaimsRequirement": {
                 "UserType": "registered"
             }
         }
     ],
     "GlobalConfiguration": {
-        "BaseUrl": "http://localhost:5000"
+        "BaseUrl": "http://localhost:5207",
+        "ServiceDiscoveryProvider": {
+            "Scheme": "http",
+            "Host": "localhost",
+            "Port": 8500,
+            "Type": "Consul",
+            "PollingInterval": 100
+        }
     },
     "AuthenticationOptions": {
         "AuthenticationProviderKeys": [ "Bearer" ],

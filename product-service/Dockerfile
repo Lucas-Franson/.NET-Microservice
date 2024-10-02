@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=build /app/WebApi.Product-Service/out ./
 
 # Expose the port your application will run on
-EXPOSE 5193
+EXPOSE 8000
 
 # Start the application
 ENTRYPOINT ["dotnet", "WebApi.Product-Service.dll"]
