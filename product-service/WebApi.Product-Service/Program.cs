@@ -16,6 +16,7 @@ builder.Services.AddSingleton<IConsulClient>(p => new ConsulClient(config => {
     config.Address = new Uri(consultHost);
 }));
 builder.Services.AddHttpClient<IConsulHttpClient, ConsulHttpClient>();
+builder.Services.AddHostedService<KafkaConsumer>(); 
 
 
 builder.Services.AddScoped<IProductService, ProductService>();

@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/[controller]")]
 public class UserController : ControllerBase {
     private readonly IUserService _userService;
+    private readonly IKafkaProducer _kafkaProducer;
 
-    public UserController(IUserService userService) {
+    public UserController(IUserService userService, IKafkaProducer kafkaProducer) {
         _userService = userService;
+        _kafkaProducer = kafkaProducer;
     }
 
     [HttpGet("{id}")]
@@ -42,4 +44,11 @@ public class UserController : ControllerBase {
         await _userService.DeleteUserAsync(id);
         return NoContent();
     }
+
+    [HttpPost("BuyProduct")]
+    public async Task<ActionResult> BuyProduct() {
+        _kafkaProducer.ProduceAsync("buy-product", "User bought a product");
+        return Ok();
+    }
+
 }

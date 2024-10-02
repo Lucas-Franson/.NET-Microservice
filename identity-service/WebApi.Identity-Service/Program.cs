@@ -49,6 +49,7 @@ builder.Services.AddSingleton<IHostedService, ConsulRegistrationService>();
 builder.Services.AddSingleton<IConsulClient>(p => new ConsulClient(config => {
     config.Address = new Uri(consultHost);
 }));
+builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
 
 // Dependency Injection
 builder.Services.AddScoped<IUserService, UserService>();
