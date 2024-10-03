@@ -16,7 +16,7 @@ public class KafkaConsumer : BackgroundService
         var consumerConfig = new ConsumerConfig
         {
             BootstrapServers = BOOTSTRAP_SERVERS,
-            GroupId = "ProductServiceGroup",
+            GroupId = "test-group",
             AutoOffsetReset = AutoOffsetReset.Earliest
         };
 
@@ -25,13 +25,13 @@ public class KafkaConsumer : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _consumer.Subscribe("InventoryUpdates");
+        _consumer.Subscribe("buy-product");
 
         while (!stoppingToken.IsCancellationRequested)
         {
             ProcessKafkaMessage(stoppingToken);
 
-            Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
         }
 
         _consumer.Close();

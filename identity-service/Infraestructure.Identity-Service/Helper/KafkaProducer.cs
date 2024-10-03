@@ -9,7 +9,9 @@ public class KafkaProducer : IKafkaProducer {
     public KafkaProducer () {
         var producerconfig = new ProducerConfig
         {
-            BootstrapServers = _BOOTSTRAP_SERVERS
+            BootstrapServers = _BOOTSTRAP_SERVERS,
+            AllowAutoCreateTopics = true,
+            Acks = Acks.All
         };
 
         _producer = new ProducerBuilder<Null, string>(producerconfig).Build();
@@ -17,7 +19,7 @@ public class KafkaProducer : IKafkaProducer {
 
     public async Task ProduceAsync(string topic, string message)
     {
-        var kafkamessage = new Message<Null, string> { Value = message, };
+        var kafkamessage = new Message<Null, string> { Value = message };
 
         await _producer.ProduceAsync(topic, kafkamessage);
     }

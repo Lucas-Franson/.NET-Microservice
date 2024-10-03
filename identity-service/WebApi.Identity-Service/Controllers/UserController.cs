@@ -47,7 +47,7 @@ public class UserController : ControllerBase {
 
     [HttpPost("BuyProduct")]
     public async Task<ActionResult> BuyProduct() {
-        _kafkaProducer.ProduceAsync("buy-product", "User bought a product");
+        await _kafkaProducer.ProduceAsync("buy-product", "User bought a product");
         return Ok();
     }
 
